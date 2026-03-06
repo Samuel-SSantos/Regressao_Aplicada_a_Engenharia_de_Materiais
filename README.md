@@ -113,21 +113,27 @@ Bibliotecas responsáveis por visualização de dados.
 Depois disso o dataset é carregado utilizando:
 
 pd.read_csv()
+
 2️⃣ Seleção de Variáveis Numéricas
+
 numeric_df = df.select_dtypes(include=np.number)
 
 Essa etapa seleciona apenas as colunas numéricas do dataset.
 
 Isso é útil porque:
 
-muitos modelos de Machine Learning trabalham apenas com números
+- Muitos modelos de Machine Learning trabalham apenas com números
 
-permite análises estatísticas mais diretas
+- Permite análises estatísticas mais diretas
 
 3️⃣ Análise da Relação entre Cimento e Resistência
+
 sns.scatterplot(x="Cement", y="Concrete compressive strength", data=df)
+
 plt.title("Cimento vs Resistência")
+
 plt.show()
+
 Objetivo
 
 Investigar a relação entre:
@@ -138,60 +144,70 @@ resistência do concreto
 
 O gráfico scatterplot permite visualizar:
 
-padrões de correlação
+- Padrões de correlação
 
-dispersão dos dados
+- Dispersão dos dados
 
-tendência entre variáveis
+- Tendência entre variáveis
 
-Insight esperado
+- Insight esperado
 
 Quanto maior a quantidade de cimento, maior tende a ser a resistência do concreto.
 
 4️⃣ Análise da Relação entre Água e Resistência
+
 sns.scatterplot(x="Water", y="Concrete compressive strength", data=df)
+
 Objetivo
 
 Analisar como a quantidade de água influencia a resistência do concreto.
 
 Na engenharia civil é conhecido que:
 
-excesso de água reduz a resistência do concreto
+- Excesso de água reduz a resistência do concreto
 
 Esse gráfico permite observar essa relação diretamente nos dados.
 
 5️⃣ Análise da Resistência por Categoria
+
 df.groupby("Strength Category")["Concrete compressive strength"].mean().plot(kind="barh")
+
 O que essa análise faz
 
-Agrupa os dados por categoria de resistência e calcula a resistência média para cada grupo.
+- Agrupa os dados por categoria de resistência e calcula a resistência média para cada grupo.
 
-Isso ajuda a entender como diferentes categorias se comportam em média.
+- Isso ajuda a entender como diferentes categorias se comportam em média.
 
-O gráfico utilizado é um bar chart horizontal, que facilita a comparação entre categorias.
+- O gráfico utilizado é um bar chart horizontal, que facilita a comparação entre categorias.
 
 6️⃣ Verificação de Dados Nulos
+
 df.isnull().sum()
+
 Objetivo
 
 Identificar valores ausentes no dataset.
 
-Valores nulos podem causar problemas em modelos de machine learning, portanto precisam ser tratados.
+- Valores nulos podem causar problemas em modelos de machine learning, portanto precisam ser tratados.
 
 7️⃣ Tratamento de Valores Nulos
+
 df['Concrete compressive strength'] = df['Concrete compressive strength'].fillna(
+
     df['Concrete compressive strength'].mean()
+    
 )
 
 Aqui os valores faltantes são substituídos pela média da variável.
 
 Essa técnica é chamada de:
 
-Mean Imputation
+- Mean Imputation
 
 Ela mantém a distribuição geral dos dados sem remover registros.
 
 8️⃣ Codificação de Variáveis Categóricas
+
 df = pd.get_dummies(df, drop_first=True)
 
 Algumas variáveis são categóricas (texto), e modelos de machine learning não conseguem trabalhar diretamente com esse tipo de dado.
@@ -205,10 +221,15 @@ Strength Category
 pode virar:
 
 Strength_Category_High
+
 Strength_Category_Medium
+
 Strength_Category_Low
+
 9️⃣ Separação entre Variáveis de Entrada e Saída
+
 X = df.drop('Concrete compressive strength', axis=1)
+
 y = df['Concrete compressive strength']
 
 Aqui os dados são divididos em:
@@ -222,19 +243,23 @@ y → variável alvo
 Resistência do concreto.
 
 🔟 Divisão entre Treino e Teste
+
 train_test_split()
 
 Os dados são divididos em dois conjuntos:
 
 Conjunto	Função
-Treino	Treinar o modelo
-Teste	Avaliar o desempenho
+Treino	    Treinar o modelo
+Teste	    Avaliar o desempenho
 
 Essa técnica evita overfitting.
 
 🤖 11️⃣ Treinamento do Modelo Random Forest
+
 RandomForestRegressor(
+
     n_estimators=200,
+    
     random_state=42
 )
 
@@ -242,11 +267,11 @@ Random Forest é um algoritmo de ensemble learning baseado em múltiplas árvore
 
 Vantagens:
 
-alta precisão
+- Alta precisão
 
-captura relações não lineares
+- Captura relações não lineares
 
-robusto contra overfitting
+- Robusto contra overfitting
 
 Parâmetros usados:
 
@@ -255,7 +280,9 @@ n_estimators = 200
 Número de árvores no modelo.
 
 12️⃣ Avaliação do Modelo
+
 r2_score()
+
 mean_absolute_error()
 
 São utilizadas duas métricas principais.
@@ -273,6 +300,7 @@ Mede o erro médio absoluto das previsões.
 Quanto menor o valor, melhor o modelo.
 
 13️⃣ Treinamento de Regressão Linear
+
 LinearRegression()
 
 A regressão linear é um modelo mais simples que assume relação linear entre variáveis.
@@ -280,6 +308,7 @@ A regressão linear é um modelo mais simples que assume relação linear entre 
 Ele é utilizado para comparar desempenho com o Random Forest.
 
 📊 14️⃣ Importância das Variáveis
+
 rf.feature_importances_
 
 Essa análise mostra quais variáveis têm maior impacto na previsão da resistência do concreto.
@@ -297,8 +326,11 @@ O modelo também é utilizado para prever a resistência de uma nova composiçã
 Exemplo:
 
 Cement: 550
+
 Water: 180
+
 Superplasticizer: 2.5
+
 Coarse Aggregate: 1000
 
 O modelo calcula a resistência estimada para essa mistura.
@@ -309,19 +341,19 @@ Essa funcionalidade pode ser usada para simulação de formulações de concreto
 
 A análise pode revelar padrões como:
 
-maior quantidade de cimento tende a aumentar a resistência
+- Maior quantidade de cimento tende a aumentar a resistência
 
-excesso de água reduz a resistência
+- Excesso de água reduz a resistência
 
-certos agregados impactam mais o resultado final
+- Certos agregados impactam mais o resultado final
 
-modelos de machine learning conseguem prever a resistência com boa precisão
+- Modelos de machine learning conseguem prever a resistência com boa precisão
 
 🚀 Possíveis Melhorias Futuras
 
-utilizar XGBoost ou Gradient Boosting
+- Utilizar XGBoost ou Gradient Boosting
 
-aplicar Cross Validation
+- Aplicar Cross Validation
 
 criar dashboard interativo
 
